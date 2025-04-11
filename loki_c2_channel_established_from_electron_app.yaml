@@ -1,0 +1,34 @@
+title: Loki C2 channel established from Electron app
+status: experimental
+description: |
+    If an Electron super-app loads untrusted remote content, attackers could execute arbitrary code. "super-app" has been observed each time when Loki C2C channel was established from VS Code, Postman and RingCentral. While it was never present in legitimate circumstances on the probe of hundreds of endpoints running these apps in 45d.
+references:
+    - https://github.com/boku7/Loki/
+author: 4y45u45c4
+date: 2025-04-12
+modified: 2025-04-12
+tags:
+    - attack.defense_evasion
+	- ttack.t1218.015
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - '\Teams.exe' 
+            - '\Code.exe'
+            - '\GitHubDesktop.exe'
+            - '\Cursor.exe'
+            - '\Postman.exe'
+            - '\RingCentral.exe'
+            - '\Obsidian.exe'
+            - '\Joplin.exe'
+            - '\Discord.exe'
+            - '\Windsurf.exe'
+        CommandLine|contains: 'super-app'
+    condition: selection_parent
+falsepositives:
+    - None
+# Increase the level once FP rate is reduced (see status)
+level: high
