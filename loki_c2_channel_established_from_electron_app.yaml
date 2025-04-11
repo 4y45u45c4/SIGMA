@@ -9,7 +9,7 @@ date: 2025-04-12
 modified: 2025-04-12
 tags:
     - attack.defense_evasion
-	- ttack.t1218.015
+    - attack.t1218.015
 logsource:
     category: process_creation
     product: windows
