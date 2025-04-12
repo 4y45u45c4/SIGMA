@@ -1,7 +1,7 @@
 title: Hijack of Electron's app folder to load C2 framework
 status: experimental
 description: |
-    To unload the payload of Loki C2, files need to be written to a directory \resources\app. This rule detects exactly this, excluding common updaters and some legit files from these directories. Also 'Program Files' has been excluded as it requires admin rights to write there. Electrons are sometimes installed there instead of %appdata%. Rule covers only 4 of vulnerable electrons, for more do your own DD.
+    To deliver the payload of Loki C2, files need to be written to a directory \resources\app. This rule detects exactly this, excluding common updaters and some legit files from these directories. Also 'Program Files' has been excluded as it requires admin rights to write there. Electrons are sometimes installed there instead of %appdata%. Rule covers only 4 of vulnerable electrons, for more do your own DD.
 references:
     - https://github.com/boku7/Loki/
 author: 4y45u45c4
