@@ -1,0 +1,58 @@
+title: Hijack of Electron's app folder to load C2 framework
+status: experimental
+description: |
+    To unload the payload of Loki C2, files need to be written to a directory \resources\app. This rule detects exactly this, excluding common updaters and some legit files from these directories. Also 'Program Files' has been excluded as it requires admin rights to write there. Electrons are sometimes installed there instead of %appdata%. Rule covers only 4 of vulnerable electrons, for more do your own DD.
+references:
+    - https://github.com/boku7/Loki/
+author: 4y45u45c4
+date: 2025-04-12
+modified: 2025-04-12
+tags:
+    - attack.defense_evasion
+    - attack.t1218.015
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_base:
+        event.type: 'File Creation'
+        src.process.name|exclude: 'OneDrive.exe'
+        tgt.file.path|contains|none: 
+            - 'C:\Program Files\'
+        tgt.file.path|contains|none: 
+            - '\resources\app.asar'
+    condition_teams:
+        tgt.file.path|contains:
+            - '\Teams\current\resources\app'
+        src.process.name|exclude:
+            - 'Update.exe'
+            - 'UserProfileManager.exe'
+    condition_vscode:
+        tgt.file.path|contains:
+            - '\Microsoft VS Code\resources\app'
+        src.process.name|contains|none:
+            - 'VSCodeSetup'
+            - 'VSCodeUserSetup'
+            - 'vscode-win32'
+            - 'VSCode-x64'
+            - 'CodeSetup'
+    condition_postman:
+        tgt.file.path|contains|all:
+            - '\Postman\app'
+            - '\resources\app'
+        src.process.name|exclude:
+            - 'Update.exe'
+            - 'UserProfileManager.exe'
+    condition_ringcentral:
+        tgt.file.path|contains:
+            - '\RingCentral\resources\app'
+        src.process.name|contains|none:
+            - 'RingCentral'
+        src.process.name|exclude:
+            - 'installer.exe'
+    condition:
+            selection_base and (condition_teams or condition_vscode or condition_postman or condition_ringcentral)
+falsepositives:
+    - Legitimate administrative activities
+    - Software updates or installations
+level: high
